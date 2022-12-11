@@ -32,13 +32,17 @@
     - name: Install package
       command: pip install PyMySQL
         
-        PyMySQL
-        
     - name: Clone Github project
       git:
         repo: "{{ repo }}"
         dest: /home/user/Desktop
         force: yes
+        
+    - name: Configure MySQL
+      shell: cp /home/user/Desktop/mysqld.cnf /etc/mysql/mysql.conf.d/mysqld.cnf
+      become: true
+      vars:
+        ansible_become_password: "{{ password }}"
         
     - name: Import MySQL database
       shell: mysql -u root < /home/user/Desktop/Cars.sql
