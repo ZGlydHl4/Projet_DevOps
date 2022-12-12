@@ -1,24 +1,16 @@
 ---
 - hosts: loadbalancer
-
-  vars:
-    - src: https://raw.githubusercontent.com/ZGlydHl4/Projet_DevOps/master/src
-    
   tasks:
     - name: Install haproxy
       apt:
         name: haproxy
         state: present
-      become: true
-     
-    - name: Download haproxy
-      shell: wget {{ src }}/
-      become: true
 
-    - name: Configure haproxy
-      shell: cp /home/user/Desktop/haproxy.cfg /etc/haproxy/haproxy.cfg
-      become: true
-    
-    - name: Restart haproxy
-      shell: service haproxy restart
-      become: true
+    - name: Download haproxy
+      get_url:
+        url: https://raw.githubusercontent.com/ZGlydHl4/Projet_DevOps/master/src/requirement.txt
+        dest: /etc/haproxy/haproxy.cfg
+        mode: 0644
+
+    - name: Start haproxy
+      command: service haproxy start

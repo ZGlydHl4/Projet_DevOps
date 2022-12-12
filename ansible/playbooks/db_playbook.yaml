@@ -1,51 +1,30 @@
 ---
 - hosts: database
-  vars:
-    - repo: https://github.com/TheoM83/Cars_Credibility
-    - password: toor
-    
   tasks:
-    - name: Install git
-      apt:
-        name: git
-        state: present
-      become: true
-      vars:
-        ansible_become_password: "{{ password }}"
-
     - name: Install MySQL
       apt:
         name: mysql-server
         state: present
-      become: true
-      vars:
-        ansible_become_password: "{{ password }}"
-        
+
     - name: Install pip
       apt:
         name: python3-pip
         state: present
-      become: true
-      vars:
-        ansible_become_password: "{{ password }}"
-        
+
     - name: Install package
       command: pip install PyMySQL
-        
-    - name: Clone Github project
-      git:
-        repo: "{{ repo }}"
-        dest: /home/user/Desktop
-        force: yes
-        
+
     - name: Configure MySQL
-      shell: cp /home/user/Desktop/mysqld.cnf /etc/mysql/mysql.conf.d/mysqld.cnf
-      become: true
-      vars:
-        ansible_become_password: "{{ password }}"
-        
+      get_url:
+        url: https://raw.githubusercontent.com/ZGlydHl4/Projet_DevOps/master/src/mysqld.cnf
+        dest: /etc/mysql/mysql.conf.d/mysqld.cnf
+        mode: 0644
+
+    - name: Download database scheme
+      get_url:
+        url: https://raw.githubusercontent.com/ZGlydHl4/Projet_DevOps/master/src/Cars.sql
+        dest: /home/azureuser
+        mode: 0644
+
     - name: Import MySQL database
-      shell: mysql -u root < /home/user/Desktop/Cars.sql
-      become: true
-      vars:
-        ansible_become_password: "{{ password }}"
+      command: mysql -u root < /home/azureuser/Cars.sql

@@ -63,57 +63,6 @@ resource "azurerm_network_interface_security_group_association" "nsgToNIC" {
   network_security_group_id = azurerm_network_security_group.nsg.id
 }
 
-
-resource "azurerm_linux_virtual_machine" "lb" {
-  name                  = "lb01"
-  location              = azurerm_resource_group.rg.location
-  resource_group_name   = azurerm_resource_group.rg.name
-  network_interface_ids = [element(azurerm_network_interface.networkInterfaces.*.id, 0)]
-  size                  = "Standard_DS1_v2"
-
-  os_disk {
-    name                 = "osDiskLb01"
-    caching              = "ReadWrite"
-    storage_account_type = "Premium_LRS"
-  }
-
-  source_image_reference {
-    publisher = "Canonical"
-    offer     = "UbuntuServer"
-    sku       = "18.04-LTS"
-    version   = "latest"
-  }
-
-  computer_name                   = "lb01"
-  admin_username                  = "azureuser"
-  disable_password_authentication = true
-
-  admin_ssh_key {
-    username   = "azureuser"
-    public_key = file("./.ssh/id_rsa.pub")
-  }
-
-  provisioner "remote-exec" {
-    connection {
-      host        = self.public_ip_address
-      type        = "ssh"
-      user        = "azureuser"
-      private_key = file("./.ssh/id_rsa")
-    }
-
-    inline = [
-      "sudo apt-add-repository ppa:ansible/ansible",
-      "sudo apt-get update -y",
-      "sudo apt-get install ansible -y"
-    ]
-  }
-
-  provisioner "file" {
-    source      = "./.ssh/id_rsa"
-    destination = "/home/azureuser/.ssh/id_rsa"
-  }
-}
-
 resource "azurerm_linux_virtual_machine" "sql" {
   name                  = "sql01"
   location              = azurerm_resource_group.rg.location
@@ -172,5 +121,76 @@ resource "azurerm_linux_virtual_machine" "web" {
   admin_ssh_key {
     username   = "azureuser"
     public_key = file("./.ssh/id_rsa.pub")
+  }
+}
+
+resource "azurerm_linux_virtual_machine" "lb" {
+  name                  = "lb01"
+  location              = azurerm_resource_group.rg.location
+  resource_group_name   = azurerm_resource_group.rg.name
+  network_interface_ids = [element(azurerm_network_interface.networkInterfaces.*.id, 0)]
+  size                  = "Standard_DS1_v2"
+
+  os_disk {
+    name                 = "osDiskLb01"
+    caching              = "ReadWrite"
+    storage_account_type = "Premium_LRS"
+  }
+
+  source_image_reference {
+    publisher = "Canonical"
+    offer     = "UbuntuServer"
+    sku       = "18.04-LTS"
+    version   = "latest"
+  }
+
+  computer_name                   = "lb01"
+  admin_username                  = "azureuser"
+  disable_password_authentication = true
+
+  admin_ssh_key {
+    username   = "azureuser"
+    public_key = file("./.ssh/id_rsa.pub")
+  }
+
+  provisioner "file" {
+    source      = "./ansible/hosts"
+    destination = "/home/azureuser/hosts"
+  }
+
+  provisioner "file" {
+    source      = "./ansible/playbooks/main.yaml"
+    destination = "/home/azureuser/playbooks/main.yaml"
+  }
+
+  provisioner "file" {
+    source      = "./ansible/playbooks/lb_playbook.yaml"
+    destination = "/home/azureuser/playbooks/lb_playbook.yaml"
+  }
+
+  provisioner "file" {
+    source      = "./ansible/playbooks/db_playbook.yaml"
+    destination = "/home/azureuser/playbooks/db_playbook.yaml"
+  }
+
+  provisioner "file" {
+    source      = "./ansible/playbooks/web_playbook.yaml"
+    destination = "/home/azureuser/playbooks/web_playbook.yaml"
+  }
+
+  provisioner "remote-exec" {
+    connection {
+      host        = self.public_ip_address
+      type        = "ssh"
+      user        = "azureuser"
+      private_key = file("./.ssh/id_rsa")
+    }
+
+    inline = [
+      "sudo apt-add-repository ppa:ansible/ansible",
+      "sudo apt-get update -y",
+      "sudo apt-get install ansible -y"
+      "ansible "
+    ]
   }
 }
