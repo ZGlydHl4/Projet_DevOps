@@ -1,4 +1,0 @@
----
-- import_playbook: lb_playbook.yaml
-- import_playbook: db_playbook.yaml
-- import_playbook: web_playbook.yaml

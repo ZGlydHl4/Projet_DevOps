@@ -1,0 +1,4 @@
+---
+- import_playbook: ./playbooks/lb_playbook.yaml
+- import_playbook: ./playbooks/db_playbook.yaml
+- import_playbook: ./playbooks/web_playbook.yaml
