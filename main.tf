@@ -158,7 +158,7 @@ resource "azurerm_linux_virtual_machine" "lb" {
       host        = self.public_ip_address
       type        = "ssh"
       user        = "azureuser"
-      private_key = file("/home/ubuntu/.ssh/id_rsa.pub")
+      private_key = file("/home/ubuntu/.ssh/id_rsa")
     }
 
     source      = "~/.ssh/id_rsa"
@@ -170,7 +170,7 @@ resource "azurerm_linux_virtual_machine" "lb" {
       host        = self.public_ip_address
       type        = "ssh"
       user        = "azureuser"
-      private_key = file("/home/ubuntu/.ssh/id_rsa.pub")
+      private_key = file("/home/ubuntu/.ssh/id_rsa")
     }
 
     source      = "./ansible/hosts"
@@ -182,7 +182,7 @@ resource "azurerm_linux_virtual_machine" "lb" {
       host        = self.public_ip_address
       type        = "ssh"
       user        = "azureuser"
-      private_key = file("/home/ubuntu/.ssh/id_rsa.pub")
+      private_key = file("/home/ubuntu/.ssh/id_rsa")
     }
 
     source      = "./ansible/playbooks/main.yaml"
@@ -194,7 +194,7 @@ resource "azurerm_linux_virtual_machine" "lb" {
       host        = self.public_ip_address
       type        = "ssh"
       user        = "azureuser"
-      private_key = file("/home/ubuntu/.ssh/id_rsa.pub")
+      private_key = file("/home/ubuntu/.ssh/id_rsa")
     }
 
     source      = "./ansible/playbooks/lb_playbook.yaml"
@@ -206,7 +206,7 @@ resource "azurerm_linux_virtual_machine" "lb" {
       host        = self.public_ip_address
       type        = "ssh"
       user        = "azureuser"
-      private_key = file("/home/ubuntu/.ssh/id_rsa.pub")
+      private_key = file("/home/ubuntu/.ssh/id_rsa")
     }
 
     source      = "./ansible/playbooks/db_playbook.yaml"
@@ -218,7 +218,7 @@ resource "azurerm_linux_virtual_machine" "lb" {
       host        = self.public_ip_address
       type        = "ssh"
       user        = "azureuser"
-      private_key = file("/home/ubuntu/.ssh/id_rsa.pub")
+      private_key = file("/home/ubuntu/.ssh/id_rsa")
     }
 
     source      = "./ansible/playbooks/web_playbook.yaml"
@@ -230,7 +230,7 @@ resource "azurerm_linux_virtual_machine" "lb" {
       host        = self.public_ip_address
       type        = "ssh"
       user        = "azureuser"
-      private_key = file("/home/ubuntu/.ssh/id_rsa.pub")
+      private_key = file("/home/ubuntu/.ssh/id_rsa")
     }
 
     inline = [
