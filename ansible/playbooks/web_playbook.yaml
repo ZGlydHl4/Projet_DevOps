@@ -1,29 +1,44 @@
 ---
 - hosts: webserver
+  vars:
+    - repo: https://github.com/TheoM83/Cars_Credibility
+    - password: toor
+
   tasks:
+    - name: Install git
+      apt:
+        name: git
+        state: present
+      become: true
+      vars:
+        ansible_become_password: "{{ password }}"
+
     - name: Install pip
       apt:
         name: python3-pip
         state: present
+      become: true
+      vars:
+        ansible_become_password: "{{ password }}"
 
-    - name: Download requirements.txt
-      get_url:
-        url: https://raw.githubusercontent.com/ZGlydHl4/Projet_DevOps/master/src/requirement.txt
-        dest: /home/azureuser
-        mode: 0644
-
-    - name: Download requirements.txt
-      get_url:
-        url: https://raw.githubusercontent.com/ZGlydHl4/Projet_DevOps/master/src/Server.py
-        dest: /home/azureuser
-        mode: 0644
+    - name: Clone Github project
+      git:
+        repo: "{{ repo }}"
+        dest: /home/user/Desktop
+        force: yes
 
     - name: Install package
-      command: pip install -r /home/azureuser/requirements.txt
+      command: pip install -r /home/user/Desktop/requirement.txt
+      become: true
+      vars:
+        ansible_become_password: "{{ password }}"
 
     - name: Start the web application
       shell: uvicorn Server:app --reload --host "{{ ansible_default_ipv4.address }}" --port 80 >/dev/null 2>&1 &
       async: 10
       poll: 0
       args:
-        chdir: /home/azureuser
+        chdir: /home/user/Desktop
+      become: true
+      vars:
+        ansible_become_password: "{{ password }}"

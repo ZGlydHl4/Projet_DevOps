@@ -1,20 +1,10 @@
 ---
-- hosts: loadbalancer
-
+- hosts: web1
   vars:
     - repo: https://github.com/TheoM83/Cars_Credibility
     - password: toor
-    
+
   tasks:
-  
-    - name: Install haproxy
-      apt:
-        name: haproxy
-        state: present
-      become: true
-      vars:
-        ansible_become_password: "{{ password }}"
-     
     - name: Install git
       apt:
         name: git
@@ -22,21 +12,33 @@
       become: true
       vars:
         ansible_become_password: "{{ password }}"
-     
+
+    - name: Install pip
+      apt:
+        name: python3-pip
+        state: present
+      become: true
+      vars:
+        ansible_become_password: "{{ password }}"
+
     - name: Clone Github project
       git:
         repo: "{{ repo }}"
         dest: /home/user/Desktop
         force: yes
 
-    - name: Configure haproxy
-      shell: cp /home/user/Desktop/haproxy.cfg /etc/haproxy/haproxy.cfg
+    - name: Install package
+      command: pip install -r /home/user/Desktop/requirement.txt
       become: true
       vars:
         ansible_become_password: "{{ password }}"
-    
-    - name: Restart haproxy
-      shell: service haproxy restart
+
+    - name: Start the web application
+      shell: uvicorn Server:app --reload --host "{{ ansible_default_ipv4.address }}" --port 80 >/dev/null 2>&1 &
+      async: 10
+      poll: 0
+      args:
+        chdir: /home/user/Desktop
       become: true
       vars:
         ansible_become_password: "{{ password }}"
