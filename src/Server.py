@@ -11,7 +11,7 @@ connection = None
 cursor = None
 
 try:
-    connection = mysql.connector.connect(host='localhost',
+    connection = mysql.connector.connect(host='192.168.12.142',
                                          database='fastapi',
                                          user='fast_user',
                                          password='secret_pass1234')
@@ -40,4 +40,4 @@ def read_item(brand: str, q: Union[str, None] = None):
 	cursor.execute("Select street_cred from brand where title = '{}'".format(brand))
 	for x in cursor:
         	print(x)
-	return {"item_id": x[0]}
+	return {"cred": x[0]}

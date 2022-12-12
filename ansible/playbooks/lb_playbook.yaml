@@ -2,41 +2,23 @@
 - hosts: loadbalancer
 
   vars:
-    - repo: https://github.com/TheoM83/Cars_Credibility
-    - password: toor
+    - src: https://raw.githubusercontent.com/ZGlydHl4/Projet_DevOps/master/src
     
   tasks:
-  
     - name: Install haproxy
       apt:
         name: haproxy
         state: present
       become: true
-      vars:
-        ansible_become_password: "{{ password }}"
      
-    - name: Install git
-      apt:
-        name: git
-        state: present
+    - name: Download haproxy
+      shell: wget {{ src }}/
       become: true
-      vars:
-        ansible_become_password: "{{ password }}"
-     
-    - name: Clone Github project
-      git:
-        repo: "{{ repo }}"
-        dest: /home/user/Desktop
-        force: yes
 
     - name: Configure haproxy
       shell: cp /home/user/Desktop/haproxy.cfg /etc/haproxy/haproxy.cfg
       become: true
-      vars:
-        ansible_become_password: "{{ password }}"
     
     - name: Restart haproxy
       shell: service haproxy restart
       become: true
-      vars:
-        ansible_become_password: "{{ password }}"

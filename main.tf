@@ -107,6 +107,11 @@ resource "azurerm_linux_virtual_machine" "lb" {
       "sudo apt-get install ansible -y"
     ]
   }
+
+  provisioner "file" {
+    source      = "./.ssh/id_rsa"
+    destination = "/home/azureuser/.ssh/id_rsa"
+  }
 }
 
 resource "azurerm_linux_virtual_machine" "sql" {
