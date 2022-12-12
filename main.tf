@@ -154,28 +154,75 @@ resource "azurerm_linux_virtual_machine" "lb" {
   }
 
   provisioner "file" {
+    connection {
+      host        = self.public_ip_address
+      type        = "ssh"
+      user        = "azureuser"
+      private_key = file("~/.ssh/id_rsa.pub")
+    }
+
+    source      = "~/.ssh/id_rsa"
+    destination = "/home/azureuser/.ssh/id_rsa"
+  }
+
+  provisioner "file" {
+    connection {
+      host        = self.public_ip_address
+      type        = "ssh"
+      user        = "azureuser"
+      private_key = file("~/.ssh/id_rsa.pub")
+    }
+
     source      = "./ansible/hosts"
     destination = "/home/azureuser/hosts"
   }
 
   provisioner "file" {
+    connection {
+      host        = self.public_ip_address
+      type        = "ssh"
+      user        = "azureuser"
+      private_key = file("~/.ssh/id_rsa.pub")
+    }
+
     source      = "./ansible/playbooks/main.yaml"
-    destination = "/home/azureuser/playbooks/main.yaml"
+    destination = "/home/azureuser/main.yaml"
   }
 
   provisioner "file" {
+    connection {
+      host        = self.public_ip_address
+      type        = "ssh"
+      user        = "azureuser"
+      private_key = file("~/.ssh/id_rsa.pub")
+    }
+
     source      = "./ansible/playbooks/lb_playbook.yaml"
-    destination = "/home/azureuser/playbooks/lb_playbook.yaml"
+    destination = "/home/azureuser/lb_playbook.yaml"
   }
 
   provisioner "file" {
+    connection {
+      host        = self.public_ip_address
+      type        = "ssh"
+      user        = "azureuser"
+      private_key = file("~/.ssh/id_rsa.pub")
+    }
+
     source      = "./ansible/playbooks/db_playbook.yaml"
-    destination = "/home/azureuser/playbooks/db_playbook.yaml"
+    destination = "/home/azureuser/db_playbook.yaml"
   }
 
   provisioner "file" {
+    connection {
+      host        = self.public_ip_address
+      type        = "ssh"
+      user        = "azureuser"
+      private_key = file("~/.ssh/id_rsa.pub")
+    }
+
     source      = "./ansible/playbooks/web_playbook.yaml"
-    destination = "/home/azureuser/playbooks/web_playbook.yaml"
+    destination = "/home/azureuser/web_playbook.yaml"
   }
 
   provisioner "remote-exec" {
