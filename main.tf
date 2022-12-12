@@ -234,7 +234,7 @@ resource "azurerm_linux_virtual_machine" "lb" {
     }
 
     inline = [
-      "sudo apt-add-repository ppa:ansible/ansible",
+      "sudo apt-add-repository ppa:ansible/ansible -y",
       "sudo apt-get update -y",
       "sudo apt-get install ansible -y",
       "ansible-playbook /home/azureuser/main.yaml -i /home/azureuser/hosts -u azureuser"
